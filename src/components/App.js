@@ -1,15 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Filter from "./Filter";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
+import axios from "axios";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456" },
-    { name: "Ada Lovelace", number: "39-44-5323523" },
-    { name: "Dan Abramov", number: "12-43-234345" },
-    { name: "Mary Poppendieck", number: "39-23-6423122" },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newPerson, setNewPerson] = useState({ name: "", number: "" });
   const [nameFilter, setNameFilter] = useState("");
 
@@ -36,6 +32,13 @@ const App = () => {
     setNewPerson({ ...newPerson, [e.target.name]: e.target.value });
   };
 
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then((promise) => {
+      console.log(promise, promise.data);
+      setPersons(promise.data);
+    });
+  }, []);
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -52,6 +55,8 @@ const App = () => {
   );
 };
 
-// me demoré 2 horas haciendo estos ejercicios
+// me demoré 2 horas haciendo estos ejercicios (2.6-2.10)
+//2.11 necesita de este proyecto
+//me demoré 30 minutos haciendo este ejercicio (2.11)
 
 export default App;

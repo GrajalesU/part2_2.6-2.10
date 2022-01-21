@@ -7,8 +7,8 @@ const Persons = ({ persons, nameFilter }) => {
         .filter(({ name }) => {
           return name.toLowerCase().indexOf(nameFilter.toLowerCase()) !== -1;
         })
-        .map(({ name, number }) => (
-          <li key={number}>
+        .map(({ name, number, id }) => (
+          <li key={id}>
             {name} - {number}
           </li>
         ))}
