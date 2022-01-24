@@ -7,10 +7,10 @@ const Persons = ({ persons, nameFilter, del }) => {
         .filter(({ name }) => {
           return name.toLowerCase().includes(nameFilter.toLowerCase());
         })
-        .map(({ name, number }) => (
-          <li key={number}>
+        .map(({ name, number, id }) => (
+          <li key={id}>
             {name} - {number}
-            <button id={number} onClick={del}>
+            <button id={id} onClick={del}>
               Delete
             </button>
           </li>

@@ -5,11 +5,13 @@ import Persons from "./Persons";
 import Notification from "./Notification";
 import { getAll, create, del, update } from "../services/persons";
 import "../App.css";
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newPerson, setNewPerson] = useState({
     name: "",
     number: "",
+    id: "",
   });
   const [nameFilter, setNameFilter] = useState("");
   const [notification, setNotification] = useState(null);
@@ -35,7 +37,7 @@ const App = () => {
         `${sameNamePerson.name} is already added to phonebook, replace the old number with a new one`
       );
       if (response) {
-        update(sameNamePerson.number, newPerson);
+        update(sameNamePerson, newPerson.number);
         setNotification(`${newPerson.name} number was modified...`);
         setTimeout(() => {
           setNotification(null);
@@ -44,17 +46,17 @@ const App = () => {
           return name !== sameNamePerson.name;
         });
         setPersons([...filteredPersons, newPerson]);
-        setNewPerson({ name: "", number: "" });
+        setNewPerson({ name: "", number: "", id: "" });
       }
       return;
     }
-    create(newPerson).then(() => {
+    create(newPerson).then((response) => {
       setNotification(`${newPerson.name} was created...`);
       setTimeout(() => {
         setNotification(null);
       }, 3000);
-      setPersons([...persons, newPerson]);
-      setNewPerson({ name: "", number: "" });
+      setPersons([...persons, response]);
+      setNewPerson({ name: "", number: "", id: "" });
     });
   };
 
@@ -63,8 +65,8 @@ const App = () => {
   };
 
   const handleDelete = (e) => {
-    const selectedPerson = persons.find(({ number }) => {
-      return number === e.target.id;
+    const selectedPerson = persons.find(({ id }) => {
+      return id === e.target.id;
     }).name;
     const isAgree = window.confirm(
       `do you really want to delete ${selectedPerson}`
@@ -72,8 +74,8 @@ const App = () => {
     if (isAgree) {
       del(e.target.id).then(() => {
         setPersons(
-          persons.filter(({ number }) => {
-            return number !== e.target.id;
+          persons.filter(({ id }) => {
+            return id !== e.target.id;
           })
         );
         setNotification(`${selectedPerson} was deleted...`);

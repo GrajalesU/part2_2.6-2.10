@@ -1,20 +1,22 @@
 import axios from "axios";
 
 const DB_URL = "http://localhost:3001/persons";
-
 export const getAll = () => {
   return axios.get(DB_URL).then((response) => response.data);
 };
 
 export const create = (newPerson) => {
-  return axios.post(DB_URL, newPerson).then((response) => response.data);
+  const aNewPerson = { ...newPerson, id: crypto.randomUUID() };
+  return axios.post(DB_URL, aNewPerson).then((response) => response.data);
 };
 
-export const update = (number, newPerson) => {
-  del(number);
-  create(newPerson);
-}; // I don't use axios put method because my primaryKey is the number of person
+export const update = (person, newNumber) => {
+  return axios.put(`${DB_URL}/${person.id}`, {
+    ...person,
+    number: newNumber,
+  });
+};
 
-export const del = (number) => {
-  return axios.delete(`${DB_URL}/${number}`).then((response) => response.data);
+export const del = (id) => {
+  return axios.delete(`${DB_URL}/${id}`).then((response) => response.data);
 };
