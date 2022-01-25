@@ -22,9 +22,10 @@ const App = () => {
 
   const handleNewPerson = (e) => {
     e.preventDefault();
-    const numberExists = persons.some(
-      ({ number }) => number === newPerson.number
-    );
+    const numberExists = persons.some(({ number }) => {
+      return number === Number(newPerson.number);
+    });
+
     if (numberExists) {
       alert(
         "This number already exists to other person, try with other number..."
