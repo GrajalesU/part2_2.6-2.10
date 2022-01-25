@@ -16,6 +16,7 @@ const PersonForm = ({ handleNewPerson, newPerson, handleChange }) => {
         number :{" "}
         <input
           name="number"
+          type="number"
           value={newPerson.number}
           onChange={handleChange}
           required
