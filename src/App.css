@@ -33,3 +33,15 @@
 .notification > button:hover {
   background: rgb(118, 194, 197);
 }
+
+.error {
+  background: red;
+}
+
+.error > button {
+  background: white;
+}
+
+.error > button:hover {
+  background: gray;
+}

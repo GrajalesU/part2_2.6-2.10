@@ -14,7 +14,10 @@ const App = () => {
     id: "",
   });
   const [nameFilter, setNameFilter] = useState("");
-  const [notification, setNotification] = useState(null);
+  const [notification, setNotification] = useState({
+    body: null,
+    isError: false,
+  });
 
   const handleFilter = (e) => {
     setNameFilter(e.target.value);
@@ -38,10 +41,24 @@ const App = () => {
         `${sameNamePerson.name} is already added to phonebook, replace the old number with a new one`
       );
       if (response) {
-        update(sameNamePerson, newPerson.number);
-        setNotification(`${newPerson.name} number was modified...`);
+        update(sameNamePerson, newPerson.number)
+          .then(() =>
+            setNotification({
+              ...notification,
+              body: `${newPerson.name} number was modified...`,
+            })
+          )
+          .catch(() =>
+            setNotification({
+              isError: true,
+              body: `${newPerson.name} was removed to server, please reload the page`,
+            })
+          );
         setTimeout(() => {
-          setNotification(null);
+          setNotification({
+            body: null,
+            isError: false,
+          });
         }, 3000);
         const filteredPersons = persons.filter(({ name }) => {
           return name !== sameNamePerson.name;
@@ -52,9 +69,16 @@ const App = () => {
       return;
     }
     create(newPerson).then((response) => {
-      setNotification(`${newPerson.name} was created...`);
+      setNotification({
+        ...notification,
+        body: `${newPerson.name} was created...`,
+      });
+
       setTimeout(() => {
-        setNotification(null);
+        setNotification({
+          body: null,
+          isError: false,
+        });
       }, 3000);
       setPersons([...persons, response]);
       setNewPerson({ name: "", number: "", id: "" });
@@ -79,9 +103,15 @@ const App = () => {
             return id !== e.target.id;
           })
         );
-        setNotification(`${selectedPerson} was deleted...`);
+        setNotification({
+          ...notification,
+          body: `${selectedPerson} was deleted...`,
+        });
         setTimeout(() => {
-          setNotification(null);
+          setNotification({
+            body: null,
+            isError: false,
+          });
         }, 3000);
       });
     }
@@ -95,7 +125,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={notification} setNotification={setNotification} />
+      <Notification setNotification={setNotification} {...notification} />
       <h2>Phonebook</h2>
 
       <Filter handleFilter={handleFilter} />
