@@ -68,21 +68,28 @@ const App = () => {
       }
       return;
     }
-    create(newPerson).then((response) => {
-      setNotification({
-        ...notification,
-        body: `${newPerson.name} was created...`,
-      });
-
-      setTimeout(() => {
+    create(newPerson)
+      .then((response) => {
         setNotification({
-          body: null,
-          isError: false,
+          ...notification,
+          body: `${newPerson.name} was created...`,
         });
-      }, 3000);
-      setPersons([...persons, response]);
-      setNewPerson({ name: "", number: "", id: "" });
-    });
+
+        setPersons([...persons, response]);
+        setNewPerson({ name: "", number: "", id: "" });
+      })
+      .catch((error) => {
+        setNotification({
+          isError: true,
+          body: error.response.data?.error,
+        });
+      });
+    setTimeout(() => {
+      setNotification({
+        body: null,
+        isError: false,
+      });
+    }, 3000);
   };
 
   const handleChange = (e) => {
